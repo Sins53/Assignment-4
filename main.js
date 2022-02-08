@@ -123,12 +123,30 @@ function displayData(data) {
 document.addEventListener("DOMContentLoaded", () => {
   getApiData();
   document.getElementById("update").style.display = 'none';
+});
 
+//delete data
+function deleteApi() {
+  document.querySelectorAll('ul').forEach(item => {
+    item.addEventListener('click', event => {
+      let delId;
+    if (event.target.classList[1] === "btn-danger") {
+      delId = event.target.parentElement.parentElement;
+      deleteApiData(delId.id);
+      //console.log("top");
+    } else if (event.target.classList[1] === "fa-trash-alt") {
+      delId = event.target.parentElement.parentElement.parentElement;
+      deleteApiData(delId.id);
+      //console.log("bottom");
+    }
+    })
+  })
+}
 
-  const form = document.forms["lecture-add"];
-  let btn1 = document.getElementById('add');
-  let btn2 = document.getElementById('update');
-  const ul = document.querySelector("#uncomplete-list ul");
+const form = document.forms["lecture-add"];
+let btn1 = document.getElementById('add');
+let btn2 = document.getElementById('update');
+const ul = document.querySelector("#uncomplete-list ul");
 
   //posting data
   if(btn1.id === 'add'){
@@ -152,22 +170,6 @@ document.addEventListener("DOMContentLoaded", () => {
     
   }
 
-  
- /* //deleting data
-
-  //querySelectorAll disables other ul
-  ul.addEventListener("click", (event) => {
-    let delId;
-    if (event.target.classList[1] === "btn-danger") {
-      delId = event.target.parentElement.parentElement;
-      deleteApiData(delId.id);
-    } else if (event.target.classList[1] === "fa-trash-alt") {
-      delId = event.target.parentElement.parentElement.parentElement;
-      deleteApiData(delId.id);
-    }
-  });
-  */
-
   //task completed button
   ul.addEventListener("click", (event) => {
     if (event.target.classList[1] === "btn-success") {
@@ -175,10 +177,11 @@ document.addEventListener("DOMContentLoaded", () => {
     } else if (event.target.classList[1] === "fa-check") {
       var taskId = event.target.parentElement.parentElement.parentElement;
     }
-    let putData = {
+    var uid = taskId.id;
+    var udata = {
       completed: true,
     };
-    patchApiData(putData, taskId.id);
+    patchApiData(udata, uid);
   });
 
   //updating data
@@ -188,10 +191,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }else if(event.target.classList[1] === 'fa-pencil'){
       var updateid = event.target.parentElement.parentElement.parentElement;
     }
-    let updateName = document.getElementById(`${updateid}-name`).data;
-    let description = document.getElementById(`${updateid}-description`).data;
-    let updatePriority = document.getElementById(`${updateid}-priority`).data;
-    console.log(updateName, description, updatePriority)
+    //console.log(updateid)
+    //console.log(updateid.id);
+    let upId = updateid.id;
+    let updateName = document.getElementById(`${upId}-name`).innerText;
+    let description = document.getElementById(`${upId}-description`).innerText;
+    let updatePriority = document.getElementById(`${upId}-priority`).innerText;
+    //console.log('here');
+    //console.log(updateName, description, updatePriority)
     let priority;
     if (updatePriority === "low") {
       priority = 0;
@@ -201,13 +208,11 @@ document.addEventListener("DOMContentLoaded", () => {
       priority = 2;
     }
 
-    const form = document.forms["lecture-add"];
     form.querySelector("input").value = updateName;
     form.querySelector("textarea").value = description;
     form.querySelector("select").value = priority;
     
-    document.getElementById('add').style.display = 'none';
-    
+    btn1.style.display = 'none';
     btn2.style.display = 'block';
     window.scrollTo(0, 0);
 
@@ -218,12 +223,13 @@ document.addEventListener("DOMContentLoaded", () => {
         let priority = form.querySelector("select").value;
         let description = form.querySelector("textarea").value;
         
-          updateApiData({
-            name: taskName,
-            priority: priority,
-            description: description,
-            completed: false,
-          },updateid.id);
+        let data = {
+          name: taskName,
+          priority: priority,
+          description: description,
+          completed: false,
+        }
+          updateApiData(data, updateid.id);
 
           form.querySelector("input").value = '';
           form.querySelector("select").value = 0;
@@ -231,22 +237,3 @@ document.addEventListener("DOMContentLoaded", () => {
       }); 
     }
   });
-});
-
-
-function deleteApi() {
-  document.querySelectorAll('ul').forEach(item => {
-    item.addEventListener('click', event => {
-      let delId;
-    if (event.target.classList[1] === "btn-danger") {
-      delId = event.target.parentElement.parentElement;
-      deleteApiData(delId.id);
-      //console.log("top");
-    } else if (event.target.classList[1] === "fa-trash-alt") {
-      delId = event.target.parentElement.parentElement.parentElement;
-      deleteApiData(delId.id);
-      //console.log("bottom");
-    }
-    })
-  })
-}

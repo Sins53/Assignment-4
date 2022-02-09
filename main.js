@@ -70,12 +70,16 @@ function updateApiData(data,id){
 function displayData(data) {
   const ul = document.querySelector("#lecture-list ul");
   const ul1 = document.querySelector("#uncomplete-list ul");
+  var i = 0;
+  var x = 0;
   
   let lisArray1 = [];
   let lisArray2 = [];
 
   data.forEach((item) => {
     const li = document.createElement("li");
+    
+    var check = item.priority;
     li.id = item._id;
     let priority;
     let color;
@@ -98,8 +102,17 @@ function displayData(data) {
     <div>
     <button class="btn btn-danger" onclick="deleteApi()"><i class="far fa-trash-alt"></i></button>
     </div>`;
-
-    lisArray1.push(li);
+    
+    if(check===2){
+      lisArray1.unshift(li);
+      i++;
+    }else if(check===0){
+      lisArray1.push(li);
+    }else {
+      lisArray1.splice(i, 0, li);
+    }
+    //lisArray1.push(li);
+    
     } else {
       li.innerHTML = `<div>
       <h6 class="title" id="${li.id}-name">${item.name}<span class="ml-2 badge badge-${color}" id="${li.id}-priority">${priority}</span></h6>
@@ -111,10 +124,19 @@ function displayData(data) {
       <button class="btn btn-danger" onclick="deleteApi()"><i class="far fa-trash-alt"></i></button>
       </div>`;
 
-      lisArray2.push(li);
+      //arranging list in order with priority
+      if(check===2){
+        lisArray2.unshift(li);
+        x++;
+        console.log(x);
+      }else if(check===0){
+        lisArray2.push(li);
+      }else {
+        lisArray2.splice(x, 0, li);
+      }
+      //lisArray2.push(li);
     }
   });
-
   ul.replaceChildren(...lisArray1);
   ul1.replaceChildren(...lisArray2);
 }

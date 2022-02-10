@@ -11,6 +11,10 @@
     background-color: #DDD;
 }
 
+h6 {
+    display: inline;
+}
+
 .content {
     max-width: 1000px;
     margin: 3rem auto;

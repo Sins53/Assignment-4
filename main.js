@@ -115,7 +115,8 @@ function displayData(data) {
     
     } else {
       li.innerHTML = `<div>
-      <h6 class="title" id="${li.id}-name">${item.name}<span class="ml-2 badge badge-${color}" id="${li.id}-priority">${priority}</span></h6>
+      <h6 class="title" id="${li.id}-name">${item.name}</h6>
+      <h6><span class="ml-2 badge badge-${color}" id="${li.id}-priority">${priority}</span></h6>
       <p class="description" id="${li.id}-description">${item.description}</p>
       </div>
       <div>
@@ -128,7 +129,7 @@ function displayData(data) {
       if(check===2){
         lisArray2.unshift(li);
         x++;
-        console.log(x);
+        //console.log(x);
       }else if(check===0){
         lisArray2.push(li);
       }else {
@@ -203,6 +204,7 @@ const ul = document.querySelector("#uncomplete-list ul");
     var udata = {
       completed: true,
     };
+    
     patchApiData(udata, uid);
   });
 
@@ -234,9 +236,10 @@ const ul = document.querySelector("#uncomplete-list ul");
     form.querySelector("textarea").value = description;
     form.querySelector("select").value = priority;
     
+    window.scrollTo(0, 0);
     btn1.style.display = 'none';
     btn2.style.display = 'block';
-    window.scrollTo(0, 0);
+    
 
     if(btn2.id === 'update'){
       btn2.addEventListener("click", (event) => {
@@ -244,18 +247,16 @@ const ul = document.querySelector("#uncomplete-list ul");
         let taskName = form.querySelector("input").value;
         let priority = form.querySelector("select").value;
         let description = form.querySelector("textarea").value;
-        
-        let data = {
+        let getData = {
           name: taskName,
           priority: priority,
           description: description,
           completed: false,
         }
-          updateApiData(data, updateid.id);
-
+          updateApiData(getData,upId);
           form.querySelector("input").value = '';
           form.querySelector("select").value = 0;
           form.querySelector("textarea").value = '';
-      }); 
+      });
     }
   });
